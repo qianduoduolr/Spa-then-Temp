@@ -123,7 +123,10 @@ The overall data structure is as followed:
 ```
 
 ### Inference
-
+<p float="left">
+<img src="figure/vos1.gif" width="49%">
+<img src="figure/vos2.gif" width="49%">
+</p>
 
 <!-- 
 ```shell
