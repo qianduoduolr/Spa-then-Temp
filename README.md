@@ -33,7 +33,6 @@ If you find this repository useful for your research, please cite our paper:
 * mmcv-full == 1.5.2
 * davis2017-evaluation
 
-The codebase is implemented based on the [MMCV](https://github.com/open-mmlab/mmcv) and [VFS](https://github.com/xvjiarui/VFS). We also provide the detailed Dockerfile under `docker/` folder for quick setup.
 
 To get started, first please clone the repo
 ```
@@ -51,10 +50,11 @@ pip install future tensorboard
 git clone https://github.com/davisvideochallenge/davis2017-evaluation.git && cd davis2017-evaluation
 python setup.py develop
 ```
+We also provide the detailed Dockerfile under `docker/` folder for quick setup.
 
 ### Model Zoo
 
-|Backbone|Stride|J&F-Mean|J-Mean|F-Mean| Download|                                                                           
+|Backbone|Stride|J&F-Mean|mIoU|PCK@0.1| PCK@0.2|                                                                           
 |----| ---- | ---- | ---- | ----| ------ | 
 | ResNet-18 (Temporal) | 8 | 66.7     | 64.0   | 69.5   |
 | ResNet-18 | 8 | 66.7     | 64.0   | 69.5   |
@@ -109,14 +109,15 @@ The overall data structure is as followed:
 │   │   │   │   ├── bike-packing/
 │   │   │   │   ├── ...
 │   ├── jhmdb
-│   │   ├──Rename_Images
+│   │   ├── Rename_Images
 │   │   │   ├── brush_hair/
 │   │   │   ├── ...
-│   │   ├──joint_positions
+│   │   ├── joint_positions
 │   │   │   ├── brush_hair/
 │   │   │   ├── ...
+│   │   ├── val_list.txt
 │   ├── vip
-│   │   ├──VIP_Fine
+│   │   ├── VIP_Fine
 │   │   │   ├── Annotations/
 │   │   │   ├── Images/
 │   │   │   ├── lists/
@@ -124,28 +125,36 @@ The overall data structure is as followed:
 
 ### Inference
 <p float="left">
-<img src="figure/vos1.gif" width="49%">
-<img src="figure/vos2.gif" width="49%">
+<!-- <img src="figure/vos1.gif" width="25%"> -->
+<!-- <img src="figure/vos1.gif" width = "230" height = "160"> -->
+<img src="figure/vos2.gif" width = "230" height = "160">
+<img src="figure/pose1.gif" width = "230" height = "160">
+<img src="figure/vip2.gif" width = "230" height = "160">
+
+
 </p>
 
-<!-- 
+The evaluation is conducted on three correspondence-related tasks, including semi-supervised video object segmentation, keypoint tracking, and human part propagation. Here we show some evaluation results.
+
+We follow the prior studies to leverage label propagation for inference, which can be achieved by:
 ```shell
-./tools/dist_test.sh ${CONFIG} ${BACKBONE_WEIGHT} ${GPUS}  --eval davis
+bash tools/dist_test.sh ${CONFIG}  ${GPUS}  ${TASK}
 ```
 
-You may pass `--options test_cfg.save_np=True` to save memory.
+Note in the config, you should give the path of the pre-trained model in  `checkpoint_path`.
 
-Inference cmd examples:
+We give a inference cmd example:
 
 ```shell
-# testing r18 model
-./tools/dist_test.sh configs/r18_nc_sgd_cos_100e_r2_1xNx8_k400.py https://github.com/xvjiarui/VFS/releases/download/v0.1-rc1/r18_nc_sgd_cos_100e_r2_1xNx8_k400-db1a4c0d.pth 1  --eval davis --options test_cfg.save_np=True
-# testing r50 model
-./tools/dist_test.sh configs/r50_nc_sgd_cos_100e_r5_1xNx2_k400.py https://github.com/xvjiarui/VFS/releases/download/v0.1-rc1/r50_nc_sgd_cos_100e_r5_1xNx2_k400-d7ce3ad0.pth 1  --eval davis --options test_cfg.save_np=True
-``` -->
+# testing ResNet-18 with a stride of 8
+bash tools/dist_test.sh configs/test/res18_d8.py 4 davis
+bash tools/dist_test.sh configs/test/res18_d8.py 4 jhmdb
+bash tools/dist_test.sh configs/test/res18_d8.py 4 vip
+```
 
 
 
 ### Tranining
 
-
+### Acknowledgement
+The codebase is implemented based on the [MMCV](https://github.com/open-mmlab/mmcv) and [VFS](https://github.com/xvjiarui/VFS). Thanks for these excellent open source repositories.
