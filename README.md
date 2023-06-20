@@ -65,7 +65,6 @@ python setup.py develop
 
 We have rerun part of the main experiments in our paper. The reproduced performance in this repo may be slightly different from the paper.
 
-
 ### Data Preparation
 #### ImageNet
 Install ImageNet dataset following the [official PyTorch ImageNet training code](https://github.com/pytorch/examples/tree/master/imagenet).
